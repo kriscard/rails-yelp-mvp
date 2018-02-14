@@ -10,11 +10,15 @@ class RestaurantsController < ApplicationController
 
   def create
     @restaurant = Restaurant.new(restaurant_params)
-    @restaurant.save
+      if @restaurant.save
+        redirect_to restaurant_path(@restaurant)
+      else
+        render :new
+    end
     # Unless @restaurant.valid?, #save will return false,
     # and @restaurant is not persisted.
     # TODO: present the form again with error messages.
-    redirect_to restaurants_path
+    # redirect_to restaurants_path
   end
 
   def show
