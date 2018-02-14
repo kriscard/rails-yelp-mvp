@@ -1,9 +1,30 @@
 class RestaurantsController < ApplicationController
-  has_many :reviews, dependent: :destroy
+  def index
+    @restaurants = Restaurant.all
+  end
 
-  validates :name, uniqueness: true, presence: true
-  validates :address, presence: true
-  validates :phone_number, uniqueness: true, presence: true
-  validates :category, inclusion: { in:["chinese", "italian", "japanese", "french", "belgian"]}
-  validates :stars, inclusion: { in: [1, 2, 3, 4, 5] }
+  def new
+    @restaurant = Restaurant.new()
+
+  end
+
+  def create
+    @restaurant = Restaurant.new(restaurant_params)
+    @restaurant.save
+    # Unless @restaurant.valid?, #save will return false,
+    # and @restaurant is not persisted.
+    # TODO: present the form again with error messages.
+    redirect_to restaurants_path
+  end
+
+  def show
+    @restaurant = Restaurant.find(params[:id])
+  end
+
+    private
+
+  def restaurant_params
+    params.require(:restaurant).permit(:name, :address, :phone_number, :category)
+  end
+
 end
